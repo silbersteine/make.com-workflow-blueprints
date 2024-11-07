@@ -6,7 +6,7 @@ This folder contains Make.com workflow blueprints crafted to help Lokalise users
 
 ## Blueprints Overview
 
-### 1. **Lokalise Task Webhook Listener**
+### 1. [**Lokalise Task Webhook Listener**](./Notion/Language_Task_Dashboard/NotionLanguageDashboardWebhooks.json)
 
    This blueprint listens for webhook notifications from Lokalise and updates your Notion dashboard whenever a task status or language status updates.
    - **Task Created**
@@ -16,7 +16,7 @@ This folder contains Make.com workflow blueprints crafted to help Lokalise users
 
    This setup keeps your Notion dashboard synchronized with task events in Lokalise.
 
-### 2. **Scheduled Task Progress Updater**
+### 2. [**Scheduled Task Progress Updater**](./Notion/Language_Task_Dashboard/NotionLanguageDashboardScheduledUpdater.json)
 
    This blueprint runs on a schedule that you set in Make.com. It checks the status of ongoing tasks in Lokalise and updates the Notion dashboard accordingly. The frequency of updates is fully customizable using Make.com’s scheduling options.
 
