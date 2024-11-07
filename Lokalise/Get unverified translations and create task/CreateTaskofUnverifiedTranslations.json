@@ -1,0 +1,883 @@
+{
+    "name": "Get unverified translations and create task supporting pagination",
+    "flow": [
+        {
+            "id": 32,
+            "module": "datastore:AddRecord",
+            "version": 1,
+            "parameters": {
+                "datastore": 27969
+            },
+            "mapper": {
+                "key": "{{executionId}} {{now}}",
+                "data": {
+                    "Key IDs": []
+                },
+                "overwrite": false
+            },
+            "metadata": {
+                "designer": {
+                    "x": -592,
+                    "y": -7
+                },
+                "restore": {
+                    "expect": {
+                        "data": {
+                            "nested": {
+                                "Key IDs": {
+                                    "mode": "chose"
+                                }
+                            }
+                        },
+                        "overwrite": {
+                            "mode": "chose"
+                        }
+                    },
+                    "parameters": {
+                        "datastore": {
+                            "label": "My data store"
+                        }
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "datastore",
+                        "type": "datastore",
+                        "label": "Data store",
+                        "required": true
+                    }
+                ],
+                "expect": [
+                    {
+                        "name": "key",
+                        "type": "text",
+                        "label": "Key"
+                    },
+                    {
+                        "name": "overwrite",
+                        "type": "boolean",
+                        "label": "Overwrite an existing record",
+                        "required": true
+                    },
+                    {
+                        "name": "data",
+                        "spec": [
+                            {
+                                "name": "Key IDs",
+                                "spec": {
+                                    "name": "value",
+                                    "type": "text"
+                                },
+                                "type": "array",
+                                "label": null
+                            }
+                        ],
+                        "type": "collection",
+                        "label": "Record"
+                    }
+                ]
+            }
+        },
+        {
+            "id": 27,
+            "module": "util:SetVariable2",
+            "version": 1,
+            "parameters": {},
+            "mapper": {
+                "name": "Limit for pagination",
+                "scope": "roundtrip",
+                "value": "1"
+            },
+            "metadata": {
+                "designer": {
+                    "x": -311,
+                    "y": -15,
+                    "name": "Repeater Count"
+                },
+                "restore": {
+                    "expect": {
+                        "scope": {
+                            "label": "One cycle"
+                        }
+                    }
+                },
+                "expect": [
+                    {
+                        "name": "name",
+                        "type": "text",
+                        "label": "Variable name",
+                        "required": true
+                    },
+                    {
+                        "name": "scope",
+                        "type": "select",
+                        "label": "Variable lifetime",
+                        "required": true,
+                        "validate": {
+                            "enum": [
+                                "roundtrip",
+                                "execution"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "value",
+                        "type": "any",
+                        "label": "Variable value"
+                    }
+                ],
+                "interface": [
+                    {
+                        "name": "Limit for pagination",
+                        "label": "Limit for pagination",
+                        "type": "any"
+                    }
+                ]
+            }
+        },
+        {
+            "id": 1,
+            "module": "lokalise:lokaliseRest",
+            "version": 1,
+            "parameters": {
+                "__IMTCONN__": 1508318
+            },
+            "mapper": {
+                "url": "/api2/projects/98631370643585c6f40da6.02984008/translations?disable_references=1&filter_unverified=1&page=1&limit={{27.`Limit for pagination`}}",
+                "method": "GET",
+                "headers": [
+                    {
+                        "key": "accept",
+                        "value": "application/json"
+                    }
+                ]
+            },
+            "metadata": {
+                "designer": {
+                    "x": 0,
+                    "y": 0
+                },
+                "restore": {
+                    "parameters": {
+                        "__IMTCONN__": {
+                            "label": "My Lokalise connection",
+                            "data": {
+                                "scoped": "true",
+                                "connection": "lokalise"
+                            }
+                        }
+                    },
+                    "expect": {
+                        "method": {
+                            "mode": "chose",
+                            "label": "GET"
+                        },
+                        "headers": {
+                            "mode": "chose",
+                            "items": [
+                                null
+                            ]
+                        },
+                        "qs": {
+                            "mode": "chose"
+                        }
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "__IMTCONN__",
+                        "type": "account:lokalise",
+                        "label": "Connection",
+                        "required": true
+                    }
+                ],
+                "expect": [
+                    {
+                        "name": "url",
+                        "type": "text",
+                        "label": "URL",
+                        "required": true
+                    },
+                    {
+                        "name": "method",
+                        "type": "select",
+                        "label": "Method",
+                        "required": true,
+                        "validate": {
+                            "enum": [
+                                "GET",
+                                "POST",
+                                "PUT",
+                                "PATCH",
+                                "DELETE"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "headers",
+                        "type": "array",
+                        "label": "Headers",
+                        "spec": [
+                            {
+                                "name": "key",
+                                "type": "text",
+                                "label": "Key"
+                            },
+                            {
+                                "name": "value",
+                                "type": "text",
+                                "label": "Value"
+                            }
+                        ]
+                    },
+                    {
+                        "name": "qs",
+                        "type": "array",
+                        "label": "Query String",
+                        "spec": [
+                            {
+                                "name": "key",
+                                "type": "text",
+                                "label": "Key"
+                            },
+                            {
+                                "name": "value",
+                                "type": "text",
+                                "label": "Value"
+                            }
+                        ]
+                    },
+                    {
+                        "name": "body",
+                        "type": "any",
+                        "label": "Body"
+                    }
+                ]
+            }
+        },
+        {
+            "id": 25,
+            "module": "builtin:BasicRepeater",
+            "version": 1,
+            "parameters": {},
+            "mapper": {
+                "step": "1",
+                "start": "1",
+                "repeats": "{{1.headers.`x-pagination-page-count`}}"
+            },
+            "metadata": {
+                "designer": {
+                    "x": 300,
+                    "y": 0
+                },
+                "restore": {},
+                "expect": [
+                    {
+                        "name": "start",
+                        "type": "number",
+                        "label": "Initial value",
+                        "required": true
+                    },
+                    {
+                        "name": "repeats",
+                        "type": "number",
+                        "label": "Repeats",
+                        "required": true,
+                        "validate": {
+                            "max": 10000,
+                            "min": 0
+                        }
+                    },
+                    {
+                        "name": "step",
+                        "type": "number",
+                        "label": "Step",
+                        "required": true
+                    }
+                ],
+                "advanced": true
+            }
+        },
+        {
+            "id": 26,
+            "module": "lokalise:lokaliseRest",
+            "version": 1,
+            "parameters": {
+                "__IMTCONN__": 1508318
+            },
+            "mapper": {
+                "url": "/api2/projects/98631370643585c6f40da6.02984008/translations?disable_references=1&filter_unverified=1&page={{25.i}}&limit={{27.`Limit for pagination`}}",
+                "method": "GET",
+                "headers": [
+                    {
+                        "key": "accept",
+                        "value": "application/json"
+                    }
+                ]
+            },
+            "metadata": {
+                "designer": {
+                    "x": 612,
+                    "y": 0
+                },
+                "restore": {
+                    "parameters": {
+                        "__IMTCONN__": {
+                            "label": "My Lokalise connection",
+                            "data": {
+                                "scoped": "true",
+                                "connection": "lokalise"
+                            }
+                        }
+                    },
+                    "expect": {
+                        "method": {
+                            "mode": "chose",
+                            "label": "GET"
+                        },
+                        "headers": {
+                            "mode": "chose",
+                            "items": [
+                                null
+                            ]
+                        },
+                        "qs": {
+                            "mode": "chose"
+                        }
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "__IMTCONN__",
+                        "type": "account:lokalise",
+                        "label": "Connection",
+                        "required": true
+                    }
+                ],
+                "expect": [
+                    {
+                        "name": "url",
+                        "type": "text",
+                        "label": "URL",
+                        "required": true
+                    },
+                    {
+                        "name": "method",
+                        "type": "select",
+                        "label": "Method",
+                        "required": true,
+                        "validate": {
+                            "enum": [
+                                "GET",
+                                "POST",
+                                "PUT",
+                                "PATCH",
+                                "DELETE"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "headers",
+                        "type": "array",
+                        "label": "Headers",
+                        "spec": [
+                            {
+                                "name": "key",
+                                "type": "text",
+                                "label": "Key"
+                            },
+                            {
+                                "name": "value",
+                                "type": "text",
+                                "label": "Value"
+                            }
+                        ]
+                    },
+                    {
+                        "name": "qs",
+                        "type": "array",
+                        "label": "Query String",
+                        "spec": [
+                            {
+                                "name": "key",
+                                "type": "text",
+                                "label": "Key"
+                            },
+                            {
+                                "name": "value",
+                                "type": "text",
+                                "label": "Value"
+                            }
+                        ]
+                    },
+                    {
+                        "name": "body",
+                        "type": "any",
+                        "label": "Body"
+                    }
+                ]
+            }
+        },
+        {
+            "id": 33,
+            "module": "datastore:UpdateRecord",
+            "version": 1,
+            "parameters": {
+                "datastore": 27969
+            },
+            "mapper": {
+                "key": "{{32.key}}",
+                "data": {
+                    "Key IDs": "{{map(26.body.translations; \"key_id\")}}"
+                },
+                "upsert": true,
+                "overwriteArrays": false
+            },
+            "metadata": {
+                "designer": {
+                    "x": 1002,
+                    "y": -4
+                },
+                "restore": {
+                    "expect": {
+                        "data": {
+                            "nested": {
+                                "Key IDs": {
+                                    "mode": "edit"
+                                }
+                            }
+                        },
+                        "upsert": {
+                            "mode": "chose"
+                        },
+                        "overwriteArrays": {
+                            "mode": "chose"
+                        }
+                    },
+                    "parameters": {
+                        "datastore": {
+                            "label": "My data store"
+                        }
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "datastore",
+                        "type": "datastore",
+                        "label": "Data store",
+                        "required": true
+                    }
+                ],
+                "expect": [
+                    {
+                        "name": "key",
+                        "type": "text",
+                        "label": "Key",
+                        "required": true
+                    },
+                    {
+                        "name": "upsert",
+                        "type": "boolean",
+                        "label": "Insert missing record",
+                        "required": true
+                    },
+                    {
+                        "name": "overwriteArrays",
+                        "type": "boolean",
+                        "label": "Overwrite an existing array in the record",
+                        "required": true
+                    },
+                    {
+                        "name": "data",
+                        "spec": [
+                            {
+                                "name": "Key IDs",
+                                "spec": {
+                                    "name": "value",
+                                    "type": "text"
+                                },
+                                "type": "array",
+                                "label": null
+                            }
+                        ],
+                        "type": "collection",
+                        "label": "Record"
+                    }
+                ]
+            }
+        },
+        {
+            "id": 31,
+            "module": "datastore:GetRecord",
+            "version": 1,
+            "parameters": {
+                "datastore": 27969
+            },
+            "filter": {
+                "name": "Break Loop",
+                "conditions": [
+                    [
+                        {
+                            "a": "{{25.i}}",
+                            "b": "{{26.headers.`x-pagination-page-count`}}",
+                            "o": "text:equal"
+                        }
+                    ]
+                ]
+            },
+            "mapper": {
+                "key": "{{32.key}}",
+                "returnWrapped": false
+            },
+            "metadata": {
+                "designer": {
+                    "x": 1395,
+                    "y": -3
+                },
+                "restore": {
+                    "parameters": {
+                        "datastore": {
+                            "label": "My data store"
+                        }
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "datastore",
+                        "type": "datastore",
+                        "label": "Data store",
+                        "required": true
+                    }
+                ],
+                "expect": [
+                    {
+                        "name": "key",
+                        "type": "text",
+                        "label": "Key",
+                        "required": true
+                    },
+                    {
+                        "name": "returnWrapped",
+                        "type": "boolean",
+                        "label": "Return Wrapped Output",
+                        "required": true
+                    }
+                ],
+                "interface": [
+                    {
+                        "name": "Key IDs",
+                        "spec": {
+                            "type": "text",
+                            "default": null,
+                            "required": false,
+                            "multiline": false
+                        },
+                        "type": "array",
+                        "label": null,
+                        "required": false
+                    }
+                ]
+            }
+        },
+        {
+            "id": 2,
+            "module": "lokalise:createATask",
+            "version": 1,
+            "parameters": {
+                "__IMTCONN__": 1508318
+            },
+            "mapper": {
+                "project_id": "98631370643585c6f40da6.02984008",
+                "title": "{{now}} Execution ID: {{executionId}}",
+                "languages": [
+                    {
+                        "language_iso": "es",
+                        "Type": {
+                            "users": [
+                                {
+                                    "team_id": 302187,
+                                    "user_id": [
+                                        176168
+                                    ]
+                                }
+                            ]
+                        }
+                    }
+                ],
+                "task_type": "translation",
+                "keys": "{{31.`Key IDs`}}",
+                "source_language_iso": "en",
+                "auto_close_languages": true,
+                "auto_close_task": true,
+                "auto_close_items": true
+            },
+            "metadata": {
+                "designer": {
+                    "x": 1988,
+                    "y": 0
+                },
+                "restore": {
+                    "parameters": {
+                        "__IMTCONN__": {
+                            "label": "My Lokalise connection",
+                            "data": {
+                                "scoped": "true",
+                                "connection": "lokalise"
+                            }
+                        }
+                    },
+                    "expect": {
+                        "project_id": {
+                            "mode": "edit"
+                        },
+                        "languages": {
+                            "items": [
+                                {
+                                    "language_iso": {
+                                        "mode": "edit"
+                                    },
+                                    "Type": {
+                                        "nested": {
+                                            "users": {
+                                                "mode": "chose",
+                                                "items": [
+                                                    {
+                                                        "team_id": {
+                                                            "mode": "chose",
+                                                            "label": "Eric's Team"
+                                                        },
+                                                        "user_id": {
+                                                            "mode": "chose",
+                                                            "label": [
+                                                                "Eric Silberstein(eric.silberstein@lokalise.com)"
+                                                            ]
+                                                        }
+                                                    }
+                                                ]
+                                            },
+                                            "groups": {
+                                                "mode": "chose"
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
+                        },
+                        "task_type": {
+                            "mode": "chose",
+                            "label": "Translation"
+                        },
+                        "keys": {
+                            "mode": "edit"
+                        },
+                        "auto_close_languages": {
+                            "mode": "chose"
+                        },
+                        "auto_close_task": {
+                            "mode": "chose"
+                        },
+                        "auto_close_items": {
+                            "mode": "chose"
+                        },
+                        "closing_tags": {
+                            "mode": "chose"
+                        },
+                        "do_lock_translations": {
+                            "mode": "chose"
+                        },
+                        "custom_translation_status_ids": {
+                            "mode": "chose"
+                        }
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "__IMTCONN__",
+                        "type": "account:lokalise",
+                        "label": "Connection",
+                        "required": true
+                    }
+                ],
+                "expect": [
+                    {
+                        "name": "project_id",
+                        "type": "select",
+                        "label": "Project Name",
+                        "mode": "edit",
+                        "required": true
+                    },
+                    {
+                        "name": "title",
+                        "type": "text",
+                        "label": "Task Title",
+                        "required": true
+                    },
+                    {
+                        "name": "languages",
+                        "type": "array",
+                        "label": "Languages",
+                        "required": true,
+                        "spec": [
+                            {
+                                "mode": "edit",
+                                "name": "language_iso",
+                                "type": "select",
+                                "label": "Language Code",
+                                "options": [],
+                                "required": true,
+                                "dynamic": true
+                            },
+                            {
+                                "name": "Type",
+                                "spec": [
+                                    {
+                                        "name": "users",
+                                        "spec": [
+                                            {
+                                                "name": "team_id",
+                                                "type": "select",
+                                                "label": "Team Name",
+                                                "options": {
+                                                    "store": []
+                                                },
+                                                "dynamic": true
+                                            }
+                                        ],
+                                        "type": "array",
+                                        "label": "Users"
+                                    },
+                                    {
+                                        "name": "groups",
+                                        "spec": [
+                                            {
+                                                "name": "team_id",
+                                                "type": "select",
+                                                "label": "Team Name",
+                                                "options": {
+                                                    "store": []
+                                                },
+                                                "dynamic": true
+                                            }
+                                        ],
+                                        "type": "array",
+                                        "label": "Groups"
+                                    }
+                                ],
+                                "type": "collection",
+                                "label": "User or Groups"
+                            }
+                        ]
+                    },
+                    {
+                        "name": "description",
+                        "type": "text",
+                        "label": "Description"
+                    },
+                    {
+                        "name": "due_date",
+                        "type": "date",
+                        "label": "Due Date"
+                    },
+                    {
+                        "name": "task_type",
+                        "type": "select",
+                        "label": "Task Type",
+                        "validate": {
+                            "enum": [
+                                "translation",
+                                "review"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "keys",
+                        "type": "array",
+                        "label": "Keys",
+                        "required": true,
+                        "spec": {
+                            "rpc": {
+                                "url": "rpc://lokalise/1/listKeys",
+                                "label": "Keys",
+                                "parameters": [
+                                    {
+                                        "name": "project_id",
+                                        "type": "select",
+                                        "label": "Project ID",
+                                        "options": "rpc://lokalise/1/listProjects",
+                                        "required": true
+                                    }
+                                ]
+                            },
+                            "type": "number",
+                            "label": "Keys",
+                            "name": "value"
+                        }
+                    },
+                    {
+                        "name": "source_language_iso",
+                        "type": "text",
+                        "label": "Source Language ISO"
+                    },
+                    {
+                        "name": "auto_close_languages",
+                        "type": "boolean",
+                        "label": "Auto Close Languages"
+                    },
+                    {
+                        "name": "auto_close_task",
+                        "type": "boolean",
+                        "label": "Auto Close Task"
+                    },
+                    {
+                        "name": "auto_close_items",
+                        "type": "boolean",
+                        "label": "Auto Close Items"
+                    },
+                    {
+                        "name": "closing_tags",
+                        "type": "array",
+                        "label": "Closing Tags",
+                        "spec": {
+                            "type": "text",
+                            "name": "value"
+                        }
+                    },
+                    {
+                        "name": "do_lock_translations",
+                        "type": "boolean",
+                        "label": "Do Lock Translations"
+                    },
+                    {
+                        "name": "custom_translation_status_ids",
+                        "type": "array",
+                        "label": "Custom Translation Status IDs",
+                        "spec": {
+                            "type": "text",
+                            "name": "value"
+                        }
+                    }
+                ]
+            }
+        }
+    ],
+    "metadata": {
+        "instant": false,
+        "version": 1,
+        "scenario": {
+            "roundtrips": 1,
+            "maxErrors": 3,
+            "autoCommit": true,
+            "autoCommitTriggerLast": true,
+            "sequential": false,
+            "slots": null,
+            "confidential": false,
+            "dataloss": false,
+            "dlq": false,
+            "freshVariables": false
+        },
+        "designer": {
+            "orphans": []
+        },
+        "zone": "us1.make.com"
+    }
+}
